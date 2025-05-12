@@ -2,11 +2,13 @@ package handlers
 
 import (
 	"net/http"
+	"regexp"
 	"strconv"
 
-	"github.com/gin-gonic/gin"
 	"wallet-api/models"
 	"wallet-api/services"
+
+	"github.com/gin-gonic/gin"
 )
 
 type UserHandler struct {
@@ -16,7 +18,6 @@ type UserHandler struct {
 func NewUserHandler(userService services.UserServiceInterface) *UserHandler {
 	return &UserHandler{userService: userService}
 }
-
 
 func (h *UserHandler) Create(c *gin.Context) {
 	var user models.User
@@ -32,6 +33,13 @@ func (h *UserHandler) Create(c *gin.Context) {
 
 	if user.Email == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "email is required"})
+		return
+	}
+
+	// Basic email format validation
+	emailRegex := regexp.MustCompile(`^[a-zA-Z0-9._%%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`)
+	if !emailRegex.MatchString(user.Email) {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid email format"})
 		return
 	}
 
