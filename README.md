@@ -32,6 +32,8 @@ wallet-api/
 │   ├── transfer.go
 │   ├── user.go
 │   ├── wallet.go
+|   ├── api_test.go
+|   ├── test_helpers.go
 |   ├── transfer_test.go
 |   ├── user_test.go
 |   └── wallet_test.go
